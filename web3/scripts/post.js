@@ -1,5 +1,5 @@
 const hre = require("hardhat");
-const { contractAddr, contractName } = require("../scripts/constants");
+const { contractAddr, contractName, personalAddress } = require("../scripts/constants");
 
 async function main() {
 
@@ -7,7 +7,8 @@ async function main() {
 
     const post = await contract.post("I feel good today");
     await post.wait();
-
+    const posts = await contract.getMemberPosts(personalAddress);
+    console.log(posts);
 }
 
 main()
