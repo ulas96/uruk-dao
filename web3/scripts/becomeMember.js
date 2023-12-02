@@ -5,13 +5,13 @@ async function main() {
 
     const contract = await hre.ethers.getContractAt(contractName, contractAddr);
 
-    const membersStart = await contract.getMemberCount();
-    console.log(membersStart);
+    const membersStart = await contract.getMembers();
+    console.log(membersStart.length);
 
-    const addMemberTx = await contract.becomeMember();
+    const addMemberTx = await contract.becomeMember("apoxy");
     await addMemberTx.wait();
-    const membersEnd = await contract.getMemberCount();
-    console.log(membersEnd);
+    const membersEnd = await contract.getMembers();
+    console.log(membersEnd.length);
 }
 
 main()
