@@ -6,19 +6,20 @@ pragma solidity ^0.8.9;
 contract Uruk {
 
     struct Member {
+        string nickname;
         uint256 memberIndex;
         address memberAddress;
-        uint postCount;
         uint256 memberSince;
     }
 
     mapping(address => Member) public members;
     mapping(address => string[]) public posts;
+    mapping(address => address[]) public connections;
     address[] public memberAddresses;
 
-    function becomeMember() public {
+    function becomeMember(string nickname) public {
         require(members[msg.sender].memberAddress != msg.sender, "Already a member");
-        members[msg.sender] = Member(memberAddresses.length, msg.sender, 0, block.timestamp);
+        members[msg.sender] = Member(nickname, memberAddresses.length + 1, msg.sender, block.timestamp);
         memberAddresses.push(msg.sender);
     }
 
@@ -28,7 +29,27 @@ contract Uruk {
         members[msg.sender].postCount++;
     }
 
-    function getMemberCount() public view returns(uint256) {
-        return memberAddresses.length;
+    function connect(address _memberAddress) public {
+        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        require(members[_memberAddress].memberAddress == _memberAddress, "Not a member");
+        connections[msg.sender].push(_memberAddress);
+        connections[_memberAddress].push(msg.sender);
+    }
+
+    function getMember(address _memberAddress) public view returns(string memory, uint256, address, uint256) {
+        return members[_memberAddress];
+    }
+
+    function getMembers() public view returns(address[] memory) {
+        return memberAddresses;
+    }
+
+    function getMemberPosts(address _memberAddress) public view returns(string[] memory) {
+        return posts[_memberAddress];
+
+    }
+
+    function getConnectionCount(address _memberAddress) public view returns(address[] memory) {
+        return connections[_memberAddress];
     }
 }
