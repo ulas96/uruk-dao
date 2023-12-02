@@ -17,16 +17,15 @@ contract Uruk {
     mapping(address => address[]) public connections;
     address[] public memberAddresses;
 
-    function becomeMember(string nickname) public {
+    function becomeMember(string memory _nickname) public {
         require(members[msg.sender].memberAddress != msg.sender, "Already a member");
-        members[msg.sender] = Member(nickname, memberAddresses.length + 1, msg.sender, block.timestamp);
+        members[msg.sender] = Member(_nickname, memberAddresses.length + 1, msg.sender, block.timestamp);
         memberAddresses.push(msg.sender);
     }
 
     function post(string memory _post) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         posts[msg.sender].push(_post);
-        members[msg.sender].postCount++;
     }
 
     function connect(address _memberAddress) public {
@@ -36,7 +35,7 @@ contract Uruk {
         connections[_memberAddress].push(msg.sender);
     }
 
-    function getMember(address _memberAddress) public view returns(string memory, uint256, address, uint256) {
+    function getMember(address _memberAddress) public view returns(Member memory) {
         return members[_memberAddress];
     }
 
