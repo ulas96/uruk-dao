@@ -22,9 +22,9 @@ contract Uruk {
         memberAddresses.push(msg.sender);
     }
 
-    function post(string memory post) public {
+    function post(string memory _post) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
-        posts[msg.sender].push(post);
+        posts[msg.sender].push(_post);
         members[msg.sender].postCount++;
     }
 
