@@ -1,0 +1,21 @@
+nav {
+    display: flex;
+    align-items: center;
+}
+
+
+.navbar-list {
+    display: flex;
+    justify-content: space-around;
+    flex-grow: 1;
+}
+
+.navbar-items {
+    list-style: none;
+}
+
+#logo {
+    width:  100px;
+    height: 100px;
+    margin-right: 10px;
+}
