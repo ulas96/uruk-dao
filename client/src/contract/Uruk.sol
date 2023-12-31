@@ -29,6 +29,9 @@ contract Uruk {
 
     function becomeMember(string memory _nickname) public {
         require(members[msg.sender].memberAddress != msg.sender, "Already a member");
+        for(uint i = 0; i < memberAddresses.length; i++) {
+            require(keccak256(abi.encodePacked(members[memberAddresses[i]].nickname)) != keccak256(abi.encodePacked(_nickname)), "Nickname already taken");
+        }
         members[msg.sender] = Member(_nickname, memberAddresses.length + 1, msg.sender, block.timestamp);
         memberAddresses.push(msg.sender);
     }
