@@ -1,10 +1,10 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
-export default function Root({account}) {
+export default function Root({member}) {
     return (
         <>
-            <Navbar account={account}/>
+            <Navbar member={member}/>
             <main>
                 <Outlet/>
             </main>
