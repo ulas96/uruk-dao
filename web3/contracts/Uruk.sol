@@ -18,6 +18,15 @@ contract Uruk {
 
     struct Post {
         address owner;
+        uint256 id;
+        string content;
+        uint256 timestamp;
+        Comment[] comments;
+    }
+
+    struct Comment {
+        address owner;
+        uint256 id;
         string content;
         uint256 timestamp;
     }
@@ -38,8 +47,50 @@ contract Uruk {
 
     function post(string memory _post) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
-        Post memory currentPost = Post(msg.sender,_post,block.timestamp);
-        posts[msg.sender].push(currentPost);
+        Post storage currentPost = posts[msg.sender].push();
+        currentPost.owner = msg.sender;
+        currentPost.id = posts[msg.sender].length;
+        currentPost.content = _post;
+        currentPost.timestamp = block.timestamp;
+    }
+
+
+
+    function deletePost(uint256 _postId) public {
+        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        require(posts[msg.sender].length >= _postId, "Post doesn't exist");
+        for(uint i = _postId - 1; i < posts[msg.sender].length - 1; i++) {
+            posts[msg.sender][i] = posts[msg.sender][i + 1];
+            posts[msg.sender][i].id = i - 1 ;
+        }
+        posts[msg.sender].pop();
+    }
+
+    function editPost(uint256 _postId, string memory _newContent) public {
+        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        require(posts[msg.sender].length >= _postId, "Post doesn't exist");
+        posts[msg.sender][_postId - 1].content = _newContent;
+    }
+
+
+    function addComment(address _postOwner,uint256 _postId, string memory _comment) public {
+        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        Post storage _post = posts[_postOwner][_postId - 1];
+        Comment memory currentComment = Comment(msg.sender, _post.comments.length + 1, _comment, block.timestamp);
+        _post.comments.push(currentComment);
+    }
+
+    function deleteComment(address _postOwner, uint256 _postId, uint256 _commentId) public {
+        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        require(posts[_postOwner].length >= _postId, "Post doesn't exist");
+        require(posts[_postOwner][_postId - 1].comments.length >= _commentId, "Comment doesn't exist");
+        require(posts[_postOwner][_postId - 1].comments[_commentId - 1].owner == msg.sender, "Not the owner of the comment");
+        for(uint i = _commentId - 1; i < posts[_postOwner][_postId - 1].comments.length - 1; i++) {
+            posts[_postOwner][_postId - 1].comments[i] = posts[_postOwner][_postId - 1].comments[i + 1];
+            posts[_postOwner][_postId - 1].comments[i].id = i - 1 ;
+        }
+        posts[_postOwner][_postId - 1].comments.pop();
+
     }
 
     function connect(address _memberAddress) public {
