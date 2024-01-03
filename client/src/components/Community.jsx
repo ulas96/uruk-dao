@@ -1,8 +1,21 @@
 import {useState} from "react";
 
 const Community = ({state}) => {
-    const [members,setMembers] = useState([]);
-    const [memberPosts, setMemberPosts] = useState([]);
+    const [members,setMembers] = useState([{
+        nickname: null,
+        memberIndex: null,
+        memberAddress: null,
+        memberSince: null,
+    }]);
+    const [memberPosts, setMemberPosts] = useState([{
+        memberIndex: null,
+        memberAddress: null,
+        postIndex: null,
+        postContent: null,
+        postDate: null,
+        postLikes: null,
+        postComments: null,
+    }]);
     const getMemberPosts = async (_memberAddr) => {
         const memberPosts = state.contract.getMemberPosts(_memberAddr);
         setMemberPosts(memberPosts);
