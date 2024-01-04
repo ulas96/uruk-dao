@@ -45,6 +45,15 @@ contract Uruk {
         memberAddresses.push(msg.sender);
     }
 
+    function changeNickname (string _nickname) public{
+        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        for(uint i = 0; i < memberAddresses.length; i++) {
+            require(keccak256(abi.encodePacked(members[memberAddresses[i]].nickname)) != keccak256(abi.encodePacked(_nickname)), "Nickname already taken");
+        }
+
+        members[msg.sender].nickname = _nickname;
+    }
+
     function post(string memory _post) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         Post storage currentPost = posts[msg.sender].push();
