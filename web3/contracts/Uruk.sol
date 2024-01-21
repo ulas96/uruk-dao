@@ -45,7 +45,7 @@ contract Uruk {
         memberAddresses.push(msg.sender);
     }
 
-    function changeNickname (string _nickname) public{
+    function changeNickname (string memory _nickname) public{
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         for(uint i = 0; i < memberAddresses.length; i++) {
             require(keccak256(abi.encodePacked(members[memberAddresses[i]].nickname)) != keccak256(abi.encodePacked(_nickname)), "Nickname already taken");
@@ -107,6 +107,28 @@ contract Uruk {
         require(members[_memberAddress].memberAddress == _memberAddress, "Not a member");
         connections[msg.sender].push(_memberAddress);
         connections[_memberAddress].push(msg.sender);
+    }
+
+    function disconnect(address _memberAddress) public {
+        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        require(members[_memberAddress].memberAddress == _memberAddress, "Not a member");
+        for(uint i = 0; i < connections[msg.sender].length; i++) {
+            if(connections[msg.sender][i] == _memberAddress) {
+                for(uint j = i; j < connections[msg.sender].length - 1; j++) {
+                    connections[msg.sender][j] = connections[msg.sender][j + 1];
+                }
+                connections[msg.sender].pop();
+            }
+        }
+
+        for(uint i = 0; i < connections[_memberAddress].length; i++) {
+            if(connections[_memberAddress][i] == msg.sender) {
+                for(uint j = i; j < connections[_memberAddress].length - 1; j++) {
+                    connections[_memberAddress][j] = connections[_memberAddress][j + 1];
+                }
+                connections[_memberAddress].pop();
+            }
+        }
     }
 
     function getMember(address _memberAddress) public view returns(Member memory) {
