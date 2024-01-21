@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ethers, } from "ethers";
-import {Route, Routes , createRoutesFromElements, createBrowserRouter, RouterProvider, BrowserRouter} from "react-router-dom";
+import {ethers} from "ethers";
+import {Route, Routes , BrowserRouter} from "react-router-dom";
 
-import TextArea from "./TextArea.jsx";
 import Navbar from "./Navbar.jsx";
 import Community from "./Community.jsx";
 import Profile from "./Profile.jsx";
 import Feed from "./Feed.jsx";
-
+import Home from "./Home.jsx";
 
 import {contractAddr, personalAddress} from "../constants/contract.js";
 import contract from "../contract/Uruk.json";
@@ -15,18 +14,26 @@ import contract from "../contract/Uruk.json";
 import './App.css';
 import "./style.css";
 
+import '@rainbow-me/rainbowkit/styles.css';
+import {
+    getDefaultWallets,
+    RainbowKitProvider,
 
-
+} from '@rainbow-me/rainbowkit';
+import { configureChains, createConfig, WagmiConfig} from 'wagmi';
+import {
+    sepolia
+} from 'wagmi/chains';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { publicProvider } from 'wagmi/providers/public';
 
 function App() {
     const { abi: ABI } = contract;
-    const [account, setAccount] = useState("None");
     const [state, setState] = useState({
         provider: null,
         signer: null,
         contract: null
     });
-    const [_account] = account;
 
     const [member, setMember] = useState({
         nickname: null,
@@ -36,99 +43,80 @@ function App() {
     });
 
 
-    useEffect(() => {
-        const connectWallet = async () => {
-            const contractABI = ABI;
-            try {
-                const { ethereum } = window;
-                if (ethereum) {
-                    const _account = await ethereum.request({
-                        method: "eth_requestAccounts",
-                    });
-
-                    ethereum.on("chainChanged", () => {
-                        window.location.reload();
-                    });
-
-                    ethereum.on("accountsChanged", () => {
-                        window.location.reload();
-                    });
-
-                    const provider = new ethers.providers.Web3Provider(ethereum);
-                    const signer = provider.getSigner();
-                    const contract = new ethers.Contract(contractAddr, contractABI, signer);
-                    setAccount(_account);
-                    setState({ provider, signer, contract });
-                } else {
-                    console.error("Please install MetaMask or another Ethereum provider");
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        };
-
-        connectWallet().then().catch();
-    }, []);
 
 
+    const { chains, publicClient } = configureChains(
+        [sepolia],
+        [
+            publicProvider()
+        ]
+    );
 
+    const { connectors } = getDefaultWallets({
+        appName: 'Uruk',
+        projectId: '1',
+        chains
+    });
 
-
-
-
-
-    useEffect(() => {
-
-        setConnectedMember().then().catch();
+    const wagmiConfig = createConfig({
+        autoConnect: true,
+        connectors,
+        publicClient
     })
 
 
 
 
-    const getMember = async (_memberAddr) => {
-        const member = await state.contract.getMember(_memberAddr);
-        return member;
-    }
-    const becomeMember = async (_nickname) => {
-        const becomeMemberTx = await state.contract.becomeMember(_nickname);
-        await becomeMemberTx.wait()
-    }
+    useEffect(() => {
+        const connectWallet = async () => {
+            const contractABI = ABI;
+            try{
+                const { ethereum } = window;
 
-    const post = async () => {
-        const postTx = await state.contract.post(text);
-        await postTx.wait();
-    }
+                if (ethereum) {
 
-    const connect = async (_memberAddr) => {
-        const connectTx = await state.contract.connect(_memberAddr);
-        await connectTx.wait();
-    }
+                    window.ethereum.on("chainChanged", () => {
+                        window.location.reload();
+                    });
 
-    const setConnectedMember = async () => {
-        const _member = await getMember(String(account));
-        setMember(_member);
+                    window.ethereum.on("accountsChanged", () => {
+                        window.location.reload();
+                    });
 
-    }
+                    const provider = new ethers.providers.Web3Provider(ethereum);
+                    const signer = provider.getSigner();
+                    const contract = new ethers.Contract(contractAddr, contractABI,signer);
+                    setState({provider: provider, signer: signer, contract: contract});
+                }
 
+            } catch(e) {
+                console.log(e);
+            }
 
-
+        };
+        connectWallet();
+    }, []);
 
 
 
 
     return(
-        <>
-            <BrowserRouter>
-                <Navbar member={member}/>
-                <Routes>
-                    <Route path="/community"  element={<Community state={state}/>}/>
-                    <Route path="/profile"  element={<Profile/>}/>
-                    <Route path="/feed"  element={<Feed/>}/>
-                </Routes>
-            </BrowserRouter>
+        <WagmiConfig config={wagmiConfig}>
+            <RainbowKitProvider chains={chains}>
+                <BrowserRouter>
+                    <Navbar member={member}/>
+                    <Routes>
+                        <Route path="/" element={<Home />}/>
+                        <Route path="/community"  element={<Community state={state} />}/>
+                        <Route path="/profile"  element={<Profile state={state}/>}/>
+                        <Route path="/feed"  element={<Feed state={state}/>}/>
+                    </Routes>
+                </BrowserRouter>
+            </RainbowKitProvider>
 
-        </>
+        </WagmiConfig>
     );
 }
+
 
 export default App;

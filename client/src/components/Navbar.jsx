@@ -1,12 +1,12 @@
 import {logo} from "../constants/main.js";
 import "./style.css";
 import {Link} from "react-router-dom";
-
-const Navbar = ({member}) => {
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+const Navbar = () => {
 
     return (
         <nav>
-            <img className="navbar-items" id="logo" src={logo} alt="logo"/>
+            <Link className="link" to="/" ><img className="navbar-items" id="logo" src={logo} alt="logo"/> </Link>
             <ul className="navbar-list">
 
                 <li className="navbar-items">
@@ -20,14 +20,8 @@ const Navbar = ({member}) => {
                 </li>
             </ul>
 
-            <div className="account">
-                <div className="account-address">
-                    <p>{member.memberAddress !== null ? `${member.nickname}` : "Connect Wallet"}</p>
-                    <p>{member.memberAddress !== null ? `${String(member.memberAddress).slice(0, 5)}...${String(member.memberAddress).slice(39, 42)}` : "" +
-                        ""}</p>
 
-                </div>
-            </div>
+            <ConnectButton />
         </nav>
     );
 };
