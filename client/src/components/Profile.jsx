@@ -1,6 +1,6 @@
 import {useAccount, useConfig} from "wagmi";
 import {useEffect, useState} from "react";
-
+import Post from "./Post.jsx";
 const Profile = ({state}) => {
         const {config} = useConfig();
         const account = useAccount({
@@ -35,21 +35,32 @@ const Profile = ({state}) => {
     useEffect(() => {
         getMember(account.address).then().catch();
         getMemberPosts(account.address).then().catch();
+        console.log(memberPosts
+        )
     }, []);
 
 
     return (
-        <div>
-            <h1>{member.nickname}</h1>
-            <div>{
-                memberPosts.map((post) => {
-                    return (
-                        <div>
-                            <h2>{post.content}</h2>
+        <div className="post-container">
+            <p>{member.nickname}</p>
+            <div>{memberPosts.map((post) => {
+                return (<div className="post">
+                    <div className="content">
+                        <p>{post.content}</p>
+                    </div>
+
+                    <div className="post-info">
+                        <div className="post-owner">
+                            <p>{post.owner}</p>
                         </div>
-                    )
-                })
-            }</div>
+                        <div className="post-time">
+                            {new Date(post.timestamp * 1000).toLocaleDateString()}
+                        </div>
+                    </div>
+                </div>)
+            })}</div>
+
+            <></>
         </div>
     );
 };
