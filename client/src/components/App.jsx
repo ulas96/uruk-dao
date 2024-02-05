@@ -8,7 +8,7 @@ import Profile from "./Profile.jsx";
 import Feed from "./Feed.jsx";
 import Home from "./Home.jsx";
 
-import {contractAddr, personalAddress} from "../constants/contract.js";
+import {contractAddr, perşsonalAddress} from "../constants/contract.js";
 import contract from "../contract/Uruk.json";
 
 import './App.css';
