@@ -1,7 +1,7 @@
 import {useAccount, useConfig} from "wagmi";
 import {useEffect, useState} from "react";
 import Post from "./Post.jsx";
-const Profile = ({state}) => {
+const Profile = ({state, active, setActive}) => {
         const {config} = useConfig();
         const account = useAccount({
             config,
@@ -33,11 +33,9 @@ const Profile = ({state}) => {
 
 
     useEffect(() => {
-        getMember(account.address).then().catch();
-        getMemberPosts(account.address).then().catch();
-        console.log(memberPosts
-        )
-    }, []);
+        setActive('profile')
+    }, [active]);
+
 
 
     return (

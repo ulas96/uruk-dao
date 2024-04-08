@@ -19,7 +19,7 @@ contract Uruk {
     struct Post {
         address owner;
         uint256 id;
-        string content;
+        bytes32 content;
         uint256 timestamp;
         Comment[] comments;
     }
@@ -27,7 +27,7 @@ contract Uruk {
     struct Comment {
         address owner;
         uint256 id;
-        string content;
+        bytes32 content;
         uint256 timestamp;
     }
 
@@ -37,7 +37,7 @@ contract Uruk {
     address[] public memberAddresses;
 
     function becomeMember(string memory _nickname) public {
-        require(members[msg.sender].memberAddress != msg.sender, "Already a member");
+            require(members[msg.sender].memberAddress != msg.sender, "Already a member");
         for(uint i = 0; i < memberAddresses.length; i++) {
             require(keccak256(abi.encodePacked(members[memberAddresses[i]].nickname)) != keccak256(abi.encodePacked(_nickname)), "Nickname already taken");
         }
@@ -54,7 +54,7 @@ contract Uruk {
         members[msg.sender].nickname = _nickname;
     }
 
-    function post(string memory _post) public {
+    function post(bytes32 memory _post) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         Post storage currentPost = posts[msg.sender].push();
         currentPost.owner = msg.sender;
@@ -75,12 +75,17 @@ contract Uruk {
         posts[msg.sender].pop();
     }
 
-    function editPost(uint256 _postId, string memory _newContent) public {
+    function editPost(uint256 _postId, hash memory _newContent) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         require(posts[msg.sender].length >= _postId, "Post doesn't exist");
         posts[msg.sender][_postId - 1].content = _newContent;
     }
 
+
+    function supportPost(address postOwner, uint256 postIndex) public {
+        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        require(post(postOwner));
+    }
 
     function addComment(address _postOwner,uint256 _postId, string memory _comment) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");

@@ -5,10 +5,13 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #00151d;
+  background-color: #0b1f27;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+}
+body, html {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+background-color: transparent;
 }

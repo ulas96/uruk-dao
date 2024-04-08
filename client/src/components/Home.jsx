@@ -1,8 +1,20 @@
-const Home = () => {
+import { useEffect } from "react";
+
+const Home = ({active, setActive}) => {
+
+    useEffect(() => {
+        setActive('home')
+    },  [active])
+
     return (
-        <div>
-            <h1>Home</h1>
+    <div className="home-container">
+    <div className="home-banner">
+            <p>Welcome to Uruk</p>
+            <p>Home to freedom and literacy</p>
+            <p>Where everything is started</p>
         </div>
+            
+    </div> 
     );
 };
 

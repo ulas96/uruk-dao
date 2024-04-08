@@ -1,0 +1,153 @@
+.banner-container {
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+
+
+.pl-100{
+    margin-left: 20px;
+
+}
+.wrap-toggle {
+    background-color: #050c10;
+}
+.modal{
+    border-radius: 15px;
+    padding: 5vh;
+}
+
+.modal.fade .modal-dialog {
+    transform: translate3d(0, 100%, 0);
+    transition: transform 0.3s ease-out;
+  }
+  
+  .modal.show .modal-dialog {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .modal-backdrop {
+    background-color: rgba(0, 0, 0,1); /* Decrease darkness */
+  }
+.bg-uruk {
+    background-color: "#0b1f27";
+}
+
+.modal-content {
+    padding: 0;
+    border-radius: 15px;
+    background-color: #050c10;
+    box-shadow: 0px 0px 100px 1px #37dcc5;
+    height: auto;
+    width: auto;
+}
+
+.modal textarea {
+    resize: both;
+    overflow: auto;
+    background-color: #050c10; 
+    width: '100%'; 
+    height: '100%';
+    border: none;
+    outline: none;
+    border-radius: '15px';
+}
+/* Home.css */
+
+.banner{
+    width: 1080px;
+    margin-right: 10px;
+    left: 0;
+}
+
+.home-banner{
+    font-size: 100px;
+    height: 1080px;
+}
+
+
+/* Profile.css */
+
+.post-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    border: 2px solid #1d1a24;
+    border-radius: 10px;
+    background-color: #1f1c26;
+}
+
+.post {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-content {
+    order: 1;
+}
+
+.post-info {
+    display: flex;
+    justify-content: space-between;
+    order: 2;
+}
+
+
+
+.popup-arrow{
+    display: none;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+}
+
+.content {
+    border-radius: 10px;
+    width: 40%;
+    height: 25%;
+    max-height: 50%;
+    z-index: 1000;
+    position: fixed;
+    top: 35%;
+    left: 31%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.create-input{
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    border: 1px solid #050c10;
+    background-color: #050c10;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+}
+
+.create-input:focus {
+    outline: none;
+}
+
+.create-btns{
+    padding-top: 10px;
+}
+
+.create-close-btn {
+    border: none;
+    border-radius: 50%;
+}
+
+
