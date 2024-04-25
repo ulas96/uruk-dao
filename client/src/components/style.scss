@@ -1,3 +1,5 @@
+// Banner.css
+
 .banner-container {
     width: 100vw;
     height: 100vh;
@@ -5,11 +7,37 @@
     background-position: center;
 }
 
+.banner{
+    width: 1080px;
+    margin-right: 10px;
+    left: 0;
+    
+}
 
-.pl-100{
-    margin-left: 20px;
+.banner-text{
+    padding-left: 10vw;
+    padding-top: 1vh;
+    font-size: 6rem;
+    color: #050c10;
+    text-shadow: 2px 2px 4px #278375;
+    letter-spacing: 2px;
 
 }
+
+.banner-text1 {
+    padding-top: 1vh;
+}
+
+.banner-text2 {
+    padding-top: 5vh;
+}
+
+.banner-text3 {
+    padding-top: 5vh;
+}
+
+// Navbar.css
+
 .wrap-toggle {
     background-color: #050c10;
 }
@@ -21,7 +49,7 @@
 .modal.fade .modal-dialog {
     transform: translate3d(0, 100%, 0);
     transition: transform 0.3s ease-out;
-  }
+}
   
   .modal.show .modal-dialog {
     transform: translate3d(0, 0, 0);
@@ -55,16 +83,6 @@
 }
 /* Home.css */
 
-.banner{
-    width: 1080px;
-    margin-right: 10px;
-    left: 0;
-}
-
-.home-banner{
-    font-size: 100px;
-    height: 1080px;
-}
 
 
 /* Profile.css */
