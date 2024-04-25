@@ -11,7 +11,7 @@ const Community = ({state, active, setActive}) => {
 
     useEffect(() => {
         setActive('community')
-    },  [active])
+    },  [])
 
 
     return (
