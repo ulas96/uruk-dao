@@ -4,7 +4,7 @@ const Home = ({active, setActive}) => {
 
     useEffect(() => {
         setActive('home')
-    },  [active])
+    }, [])
 
     return (
     <div className="home-container">
