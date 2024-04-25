@@ -1,36 +1,37 @@
-import Navigation from "./Navigation"; 
+import Navigation from "./Navigation";
 import { homeStyling, profileStyling, communityStyling } from "../constants/main";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const Banner = ({active, setActive}) => {
-
-
-    let styling = {
-        backgroundImage: homeStyling.backgroundImage
-    };
+const Banner = ({ active, setActive }) => {
 
 
-    useEffect( () => {
+    const [styling, setStyling] = useState({});
+
+
+    useEffect(() => {
         const reloadStyling = () => {
-            if(active === 'home') {
-                styling.backgroundImage = homeStyling.backgroundImage;
-            } else if(active === 'profile') {
-                styling.backgroundImage = profileStyling.backgroundImage;
-            } else if(active === 'community') {
-                styling.backgroundImage = communityStyling.backgroundImage;
+            if (active === 'home') {
+                setStyling(homeStyling);
+            } else if (active === 'profile') {
+                setStyling(profileStyling);
+            } else if (active === 'community') {
+                setStyling(communityStyling);
             }
-        }
+        };
         reloadStyling();
-    }, [active])
+    }, [active]); 
 
 
-    console.log(homeStyling.backgroundImage);
+
+    console.log(styling.backgroundImage);
 
     return (
-        <div className="banner-container" style={{backgroundImage: styling.backgroundImage}}>
-            <Navigation active={active} setActive={setActive}/>
-            <div>
-                {active}
+        <div className="banner-container" style={{ backgroundImage: styling.backgroundImage }}>
+            <Navigation active={active} setActive={setActive} />
+            <div className="banner-text">
+                <div className="banner-text1">{styling.text1}<br/></div>
+                <div className="banner-text2">{styling.text2}<br/></div>
+                <div className="banner-text3">{styling.text3}<br/></div>
             </div>
 
         </div>
