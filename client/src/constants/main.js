@@ -19,7 +19,10 @@ const homeStyling = {
     fontSize: '1.5em',
     fontWeight: 'bold',
     textShadow: '2px 2px 4px black',
-    textAlign: 'center'
+    textAlign: 'center',
+    text1: 'Welcome to Uruk',
+    text2: 'Home to freedom and literacy',
+    text3: 'Where everything is started'
 };
 
 const communityStyling = {
@@ -38,7 +41,10 @@ const communityStyling = {
     fontSize: '1.5em',
     fontWeight: 'bold',
     textShadow: '2px 2px 4px black',
-    textAlign: 'center'
+    textAlign: 'center',
+    text1: 'Share your idea',
+    text2: 'Develope the world',
+    text3: 'Expand your project'
 };
 
 const profileStyling= {
@@ -57,7 +63,10 @@ const profileStyling= {
     fontSize: '1.5em',
     fontWeight: 'bold',
     textShadow: '2px 2px 4px black',
-    textAlign: 'center'
+    textAlign: 'center',    
+    text1: 'Welcome to Uruk',
+    text2: 'Home to freedom and literacy',
+    text3: 'Where everything is started'
 };
 
 export {logo, home, homeStyling, communityStyling, profileStyling};
