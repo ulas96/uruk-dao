@@ -24,6 +24,7 @@ const Navigation = ({ active, setActive }) => {
         const closeAlert = window.confirm("Are you sure you want to close the popup?");
         closeAlert &&  setActive('');
     };
+
     return (
         
 
@@ -42,7 +43,7 @@ const Navigation = ({ active, setActive }) => {
             <Navbar.Collapse  className="basic-navbar-nav">
                 <Nav className="d-flex justify-content-around flex-grow-1 pl-100">
                     <Nav.Link id="community" className="text-decoration-none text-white" href="/community" onClick={() => handleActive('community')}>Community</Nav.Link>
-                    <Nav.Link id="create" className="text-decoration-none text-white"  onClick={() => handleActive('create')}>Create</Nav.Link>
+                    <Nav.Link id="create" className="text-decoration-none text-white" onClick={() => handleActive('create')}>Create</Nav.Link>
                     <Modal centered show={active === 'create'} onHide={handleClose}>
   
                         <Modal.Body>
