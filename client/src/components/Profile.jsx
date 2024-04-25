@@ -34,7 +34,7 @@ const Profile = ({state, active, setActive}) => {
 
     useEffect(() => {
         setActive('profile')
-    }, [active]);
+    }, []);
 
 
 
