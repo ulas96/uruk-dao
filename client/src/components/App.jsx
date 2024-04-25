@@ -24,6 +24,7 @@ import {
     sepolia
 } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import { Create } from './Create.jsx';
 
 
 const theme = {
@@ -46,7 +47,8 @@ const theme = {
       connectionIndicator: '...',
       downloadBottomCardBackground: '...',
       downloadTopCardBackground: '...',
-      error: '...',
+      closeButtonBackground: '...',
+      error: '#050c10',
       generalBorder: '...',
       generalBorderDim: '...',
       menuItemBackground: '...',
