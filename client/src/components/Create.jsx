@@ -1,7 +1,9 @@
+import { useEffect } from "react";
+export const Create = ({active, setActive}) => {
 
-
-
-export const Create = () => {
+    useEffect(() => {
+        setActive('create')
+    }, [active])
     return (
         <>
 
