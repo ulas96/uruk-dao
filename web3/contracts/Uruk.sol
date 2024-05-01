@@ -21,6 +21,8 @@ contract Uruk {
         uint256 id;
         bytes32 content;
         uint256 timestamp;
+        address[] supporters;
+        uint256 tip;
         Comment[] comments;
     }
 
@@ -54,13 +56,15 @@ contract Uruk {
         members[msg.sender].nickname = _nickname;
     }
 
-    function post(bytes32 memory _post) public {
+    function post(string memory _post) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         Post storage currentPost = posts[msg.sender].push();
         currentPost.owner = msg.sender;
         currentPost.id = posts[msg.sender].length;
-        currentPost.content = _post;
+        currentPost.content = keccak256(abi.encodePacked(_post));
         currentPost.timestamp = block.timestamp;
+        currentPost.supporters = new address[](0);
+        currentPost.tip = 0;
     }
 
 
@@ -75,16 +79,16 @@ contract Uruk {
         posts[msg.sender].pop();
     }
 
-    function editPost(uint256 _postId, hash memory _newContent) public {
+    function editPost(uint256 _postId, string memory _newContent) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         require(posts[msg.sender].length >= _postId, "Post doesn't exist");
-        posts[msg.sender][_postId - 1].content = _newContent;
+        posts[msg.sender][_postId - 1].content = keccak256(abi.encodePacked(_newContent));
     }
 
 
-    function supportPost(address postOwner, uint256 postIndex) public {
+    function supportPost(address postOwner, uint256 postIndex, uint256 _value) public payable {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
-        require(post(postOwner));
+        require(_value >= msg.value, "Not enough ether");
     }
 
     function addComment(address _postOwner,uint256 _postId, string memory _comment) public {
