@@ -14,7 +14,7 @@ contract Uruk {
         uint256 memberIndex;
         address memberAddress;
         uint256 memberSince;
-    }
+    };
 
     struct Post {
         address owner;
@@ -24,14 +24,14 @@ contract Uruk {
         address[] supporters;
         uint256 tip;
         Comment[] comments;
-    }
+    };
 
     struct Comment {
         address owner;
         uint256 id;
         bytes32 content;
         uint256 timestamp;
-    }
+    };
 
     mapping(address => Member) public members;
     mapping(address => Post[]) public posts;
@@ -97,7 +97,12 @@ contract Uruk {
     function addComment(address _postOwner,uint256 _postId, string memory _comment) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         Post storage _post = posts[_postOwner][_postId - 1];
-        Comment memory currentComment = Comment(msg.sender, _post.comments.length + 1, keccak256(abi.encodePacked(_comment)), block.timestamp);
+        Comment memory currentComment = Comment({
+    owner: msg.sender, 
+    id: _post.comments.length + 1, 
+    content: keccak256(abi.encodePacked(_comment)), 
+    timestamp: block.timestamp
+});
         _post.comments.push(currentComment);
     }
 
