@@ -89,12 +89,15 @@ contract Uruk {
     function supportPost(address postOwner, uint256 postIndex, uint256 _value) public payable {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         require(_value >= msg.value, "Not enough ether");
+        require(posts[postOwner].length >= postIndex, "Post doesn't exist");
+        posts[postOwner][postIndex - 1].supporters.push(msg.sender);
+        posts[postOwner][postIndex - 1].tip += msg.value;
     }
 
     function addComment(address _postOwner,uint256 _postId, string memory _comment) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         Post storage _post = posts[_postOwner][_postId - 1];
-        Comment memory currentComment = Comment(msg.sender, _post.comments.length + 1, _comment, block.timestamp);
+        Comment memory currentComment = Comment(msg.sender, _post.comments.length + 1, keccak256(abi.encodePacked(_comment)), block.timestamp);
         _post.comments.push(currentComment);
     }
 
