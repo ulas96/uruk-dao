@@ -14,7 +14,7 @@ contract Uruk {
         uint256 memberIndex;
         address memberAddress;
         uint256 memberSince;
-    };
+    }
 
     struct Post {
         address owner;
@@ -24,14 +24,14 @@ contract Uruk {
         address[] supporters;
         uint256 tip;
         Comment[] comments;
-    };
+    }
 
     struct Comment {
         address owner;
         uint256 id;
         bytes32 content;
         uint256 timestamp;
-    };
+    }
 
     mapping(address => Member) public members;
     mapping(address => Post[]) public posts;
