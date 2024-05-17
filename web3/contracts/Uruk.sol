@@ -33,6 +33,21 @@ contract Uruk {
         uint256 timestamp;
     }
 
+
+    struct Participant {
+        address participantAddress;
+        bytes32[] answers;
+    }
+
+    struct Campaign {
+        address creator;
+        uint256 id;
+        uint256 donation;
+        uint256 article;
+        Participant[] participants;
+        uint256 maxReward;
+    }
+
     mapping(address => Member) public members;
     mapping(address => Post[]) public posts;
     mapping(address => address[]) public connections;
