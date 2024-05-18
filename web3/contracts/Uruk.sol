@@ -37,7 +37,6 @@ contract Uruk {
     struct Participant {
         address participantAddress;
         bytes32[] answers;
-        bool isRewarded;
     }
 
     struct Campaign {
@@ -48,7 +47,6 @@ contract Uruk {
         bytes32[] questions;
         Participant[] participants;
         uint256 maxReward;
-        uint256 remainingReward;
     }
 
     mapping(address => Member) public members;
@@ -167,9 +165,8 @@ contract Uruk {
     }
 
 
-    function createCampaign(uint256 _donation, uint256 _articleId, bytes32[] memory _questions, uint256 _maxReward) public payable {
+    function createCampaign(uint256 _donation, uint256 _articleId, bytes32[] memory _questions, uint256 _maxReward) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
-        require(msg.value >= _donation);
         uint256 campaignId = campaigns.length + 1;
         Campaign memory newCampaign = campaigns.push();
         newCampaign.creator = msg.sender;
@@ -179,20 +176,18 @@ contract Uruk {
         newCampaign.questions = _questions;
         newCampaign.participants = new Participant[](0);
         newCampaign.maxReward = _maxReward;
-        newCampaign.remainingReward = _donation;
     }
 
     function participateCampaign(uint256 _campaignId, bytes32[] memory _answers) public {
         require(members[msg.sender].memberAddress == msg.sender, "Not a member");
-        require(campaigns.length >= _campaignId, "Campaign doesn't exist");
-        require(_answers.length == campaigns[_campaignId - 1].questions.length);
+        require(campaigns.length >= _campaignId - 1, "Campaign doesn't exist");
         Campaign storage currentCampaign = campaigns[_campaignId - 1];
-        Participant memory currentParticipant = Participant(msg.sender, _answers, false);
+        Participant memory currentParticipant = Participant(msg.sender, _answers);
         currentCampaign.participants.push(currentParticipant);
     }
 
     function rewardParticipant(uint256 _campaignId, uint256 _participantId) public {
-        require(campaigns[_campaignId-1].creator == msg.sender, "Only creators of the campaign can reward participants");
+        //require(campaigns[_campaignId-1].creator == msg.sender, "Only creators of the campaign can reward participants");
         require(campaigns[_campaignId-1].remainingReward > 0);
         require(campaigns[_campaignId-1].participants.length >= _participantId, "Participant doesn't exist");
         require(campaigns[_campaignId-1].participants[_participantId-1].isRewarded == false, "Participant already rewarded");
@@ -201,7 +196,7 @@ contract Uruk {
     }
 
     function claimReward(uint256 _campaignId) public {
-        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        //require(members[msg.sender].memberAddress == msg.sender, "Not a member");
         require(campaigns[_campaignId-1].participants.length > 0, "No participants");
         for(uint i = 0; i < campaigns[_campaignId-1].participants.length; i++) {
             if(campaigns[_campaignId-1].participants[i].participantAddress == msg.sender) {
@@ -209,10 +204,6 @@ contract Uruk {
                 payable(msg.sender).transfer(campaigns[_campaignId-1].maxReward);
             }
         }
-    }
-
-    function getArticle(address _memberAddress, uint256 _articleId) public view returns(Article memory) {
-        return articles[_memberAddress][_articleId];
     }
 
 
