@@ -19,29 +19,30 @@ contract Uruk {
     struct Article {
         address owner;
         uint256 id;
-        bytes32 content;
+        string content;
         uint256 timestamp;
         address[] supporters;
-        uint256 tip;
+        uint256 support;
         Comment[] comments;
     }
 
     struct Comment {
         address owner;
         uint256 id;
-        bytes32 content;
+        string content;
         uint256 timestamp;
     }
 
 
 
     mapping(address => Member) public members;
-    mapping(address => Article[]) public articles;
+    mapping(address => uint256[]) public articleOwners;
     mapping(address => address[]) public connections;
     address[] public memberAddresses;
+    Article[] public articles;
 
     function becomeMember(string memory _nickname) public {
-            require(members[msg.sender].memberAddress != msg.sender, "Already a member");
+            require(isMember(msg.sender), "Already a member");
         for(uint i = 0; i < memberAddresses.length; i++) {
             require(keccak256(abi.encodePacked(members[memberAddresses[i]].nickname)) != keccak256(abi.encodePacked(_nickname)), "Nickname already taken");
         }
@@ -50,7 +51,7 @@ contract Uruk {
     }
 
     function changeNickname (string memory _nickname) public{
-        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        require(isMember(msg.sender), "Not a member");
         for(uint i = 0; i < memberAddresses.length; i++) {
             require(keccak256(abi.encodePacked(members[memberAddresses[i]].nickname)) != keccak256(abi.encodePacked(_nickname)), "Nickname already taken");
         }
@@ -58,39 +59,44 @@ contract Uruk {
     }
 
     function publishArticle(string memory _article) public {
-        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
-        Article storage currentarticle = articles[msg.sender].push();
-        currentarticle.owner = msg.sender;
-        currentarticle.id = articles[msg.sender].length;
-        currentarticle.content = keccak256(abi.encodePacked(_article));
-        currentarticle.timestamp = block.timestamp;
-        currentarticle.supporters = new address[](0);
-        currentarticle.tip = 0;
+        require(isMember(msg.sender), "Not a member");
+        require(bytes(_article).length == 64);
+        Article storage currentArticle = articles.push();
+        currentArticle.owner = msg.sender;
+        currentArticle.id = articles.length;
+        currentArticle.content = _article;
+        currentArticle.timestamp = block.timestamp;
+        currentArticle.supporters = new address[](0);
+        currentArticle.support = 0;
+        articleOwners[msg.sender].push(currentArticle.id);
     }
 
 
     function editarticle(uint256 _articleId, string memory _newContent) public {
-        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
-        require(articles[msg.sender].length >= _articleId, "article doesn't exist");
-        articles[msg.sender][_articleId - 1].content = keccak256(abi.encodePacked(_newContent));
+        require(isMember(msg.sender), "Not a member");
+        require(bytes(_newContent).length == 64);
+        require(articleOwners[msg.sender].length >= _articleId, "article doesn't exist");
+        Article memory _currentArticle = articles[_articleId-1];
+        require(_currentArticle.owner == msg.sender);
+        articles[_articleId-1].content = _newContent;
     }
 
 
-    function supportarticle(address articleOwner, uint256 articleIndex, uint256 _value) public payable {
-        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+    function supportArticle(uint256 _articleId, uint256 _value) public payable {
+        require(isMember(msg.sender), "Not a member");
         require(_value >= msg.value, "Not enough ether");
-        require(articles[articleOwner].length >= articleIndex, "article doesn't exist");
-        articles[articleOwner][articleIndex - 1].supporters.push(msg.sender);
-        articles[articleOwner][articleIndex - 1].tip += msg.value;
+        require(articles.length >= _articleId, "article doesn't exist");
+        articles[_articleId-1].supporters.push(msg.sender);
+        articles[_articleId-1].support += msg.value;
     }
 
-    function addComment(address _articleOwner,uint256 _articleId, string memory _comment) public {
-        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
-        Article storage _article = articles[_articleOwner][_articleId - 1];
+    function addComment(uint256 _articleId, string memory _comment) public {
+        require(isMember(msg.sender), "Not a member");
+        Article storage _article = articles[_articleId];
         Comment memory currentComment = Comment({
             owner: msg.sender, 
             id: _article.comments.length + 1, 
-            content: keccak256(abi.encodePacked(_comment)), 
+            content: _comment, 
             timestamp: block.timestamp
         });
         _article.comments.push(currentComment);
@@ -98,10 +104,14 @@ contract Uruk {
 
 
     function connect(address _memberAddress) public {
-        require(members[msg.sender].memberAddress == msg.sender, "Not a member");
+        require(isMember(msg.sender), "Not a member");
         require(members[_memberAddress].memberAddress == _memberAddress, "Not a member");
         connections[msg.sender].push(_memberAddress);
         connections[_memberAddress].push(msg.sender);
+    }
+
+    function getArticle(uint256 _articleId) public view returns(Article memory _article) {
+        _article = articles[_articleId];
     }
 
     function getMember(address _memberAddress) public view returns(Member memory) {
@@ -112,8 +122,8 @@ contract Uruk {
         return memberAddresses;
     }
 
-    function getMemberarticles(address _memberAddress) public view returns(Article[] memory) {
-        return articles[_memberAddress];
+    function getMemberArticles(address _memberAddress) public view returns(uint256[] memory) {
+        return articleOwners[_memberAddress];
 
     }
 
