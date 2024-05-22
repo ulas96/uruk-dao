@@ -7,7 +7,7 @@ async function main() {
 
     const member= await contract.getMember(personalAddress);
 
-    console.log(member.nickname);
+    console.log(member);
 }
 
 main()
