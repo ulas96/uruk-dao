@@ -1,14 +1,17 @@
 const hre = require("hardhat");
 const { contractAddr, contractName, personalAddress } = require("../scripts/constants");
+const {bondHash, readHashBond} = require("proof-of-string");
 
 async function main() {
 
     const contract = await hre.ethers.getContractAt(contractName, contractAddr);
-
-    const post = await contract.publishArticle("Uruk DAO is more advanced than ever");
-    await post.wait();
-    const posts = await contract.getMemberPosts(personalAddress);
-    console.log(posts.map((post) => post.content))
+    // const hash = await bondHash("Uruk DAO is more advanced than ever")
+    // console.log(hash);
+    // const publishArticleTx = await contract.publishArticle(hash);
+    // await publishArticleTx.wait();
+    const article = await contract.getArticle(0);
+    const string = await readHashBond(article.content);
+    console.log(string)
 }
 
 main()
