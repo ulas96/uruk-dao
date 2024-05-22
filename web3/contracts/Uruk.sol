@@ -42,7 +42,6 @@ contract Uruk {
     Article[] public articles;
 
     function becomeMember(string memory _nickname) public {
-            require(isMember(msg.sender), "Already a member");
         for(uint i = 0; i < memberAddresses.length; i++) {
             require(keccak256(abi.encodePacked(members[memberAddresses[i]].nickname)) != keccak256(abi.encodePacked(_nickname)), "Nickname already taken");
         }
@@ -60,7 +59,6 @@ contract Uruk {
 
     function publishArticle(string memory _article) public {
         require(isMember(msg.sender), "Not a member");
-        require(bytes(_article).length == 64);
         Article storage currentArticle = articles.push();
         currentArticle.owner = msg.sender;
         currentArticle.id = articles.length;
@@ -72,9 +70,8 @@ contract Uruk {
     }
 
 
-    function editarticle(uint256 _articleId, string memory _newContent) public {
+    function editArticle(uint256 _articleId, string memory _newContent) public {
         require(isMember(msg.sender), "Not a member");
-        require(bytes(_newContent).length == 64);
         require(articleOwners[msg.sender].length >= _articleId, "article doesn't exist");
         Article memory _currentArticle = articles[_articleId-1];
         require(_currentArticle.owner == msg.sender);
@@ -111,7 +108,7 @@ contract Uruk {
     }
 
     function getArticle(uint256 _articleId) public view returns(Article memory _article) {
-        _article = articles[_articleId];
+        _article = articles[_articleId-1];
     }
 
     function getMember(address _memberAddress) public view returns(Member memory) {
