@@ -14,6 +14,7 @@ contract Uruk {
         uint256 memberId;
         address memberAddress;
         uint256 memberSince;
+        uint256[] ownedArticles;
     }
 
     struct Article {
@@ -36,7 +37,6 @@ contract Uruk {
 
 
     mapping(address => Member) public members;
-    mapping(address => uint256[]) public articleOwners;
     mapping(address => address[]) public connections;
     address[] public memberAddresses;
     Article[] public articles;
@@ -45,7 +45,8 @@ contract Uruk {
         for(uint i = 0; i < memberAddresses.length; i++) {
             require(keccak256(abi.encodePacked(members[memberAddresses[i]].nickname)) != keccak256(abi.encodePacked(_nickname)), "Nickname already taken");
         }
-        members[msg.sender] = Member(_nickname, memberAddresses.length + 1, msg.sender, block.timestamp);
+        uint256[] memory _articles = new uint256[](0); 
+        members[msg.sender] = Member(_nickname, memberAddresses.length + 1, msg.sender, block.timestamp, _articles);
         memberAddresses.push(msg.sender);
     }
 
@@ -66,13 +67,14 @@ contract Uruk {
         currentArticle.timestamp = block.timestamp;
         currentArticle.supporters = new address[](0);
         currentArticle.support = 0;
-        articleOwners[msg.sender].push(currentArticle.id);
+        members[msg.sender].ownedArticles.push(currentArticle.id);
     }
 
 
     function editArticle(uint256 _articleId, string memory _newContent) public {
         require(isMember(msg.sender), "Not a member");
-        require(articleOwners[msg.sender].length >= _articleId, "article doesn't exist");
+        require(articles[_articleId-1].owner == msg.sender, "Only owners can edit the article");
+        require(articles.length >= _articleId, "Article doesn't exist");
         Article memory _currentArticle = articles[_articleId-1];
         require(_currentArticle.owner == msg.sender);
         articles[_articleId-1].content = _newContent;
@@ -120,7 +122,7 @@ contract Uruk {
     }
 
     function getMemberArticles(address _memberAddress) public view returns(uint256[] memory) {
-        return articleOwners[_memberAddress];
+        return members[_memberAddress].ownedArticles;
 
     }
 
