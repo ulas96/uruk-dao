@@ -5,11 +5,10 @@ const {bondHash, readHashBond} = require("proof-of-string");
 async function main() {
 
     const contract = await hre.ethers.getContractAt(contractName, contractAddr);
-    // const hash = await bondHash("Uruk DAO is more advanced than ever")
-    // console.log(hash);
-    // const publishArticleTx = await contract.publishArticle(hash);
-    // await publishArticleTx.wait();
-    const article = await contract.getArticle(0);
+    const hash = await bondHash("Uruk DAO is more advanced than ever")
+    const publishArticleTx = await contract.publishArticle(hash);
+    await publishArticleTx.wait();
+    const article = await contract.getArticle(1);
     const string = await readHashBond(article.content);
     console.log(string)
 }
