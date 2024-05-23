@@ -37,7 +37,7 @@ contract Uruk {
 
 
     mapping(address => Member) public members;
-    mapping(address => address[]) public connections;
+    
     address[] public memberAddresses;
     Article[] public articles;
 
@@ -45,8 +45,7 @@ contract Uruk {
         for(uint i = 0; i < memberAddresses.length; i++) {
             require(keccak256(abi.encodePacked(members[memberAddresses[i]].nickname)) != keccak256(abi.encodePacked(_nickname)), "Nickname already taken");
         }
-        uint256[] memory _articles = new uint256[](0); 
-        members[msg.sender] = Member(_nickname, memberAddresses.length + 1, msg.sender, block.timestamp, _articles);
+        members[msg.sender] = Member(_nickname, memberAddresses.length + 1, msg.sender, block.timestamp, new uint256[](0));
         memberAddresses.push(msg.sender);
     }
 
@@ -102,12 +101,7 @@ contract Uruk {
     }
 
 
-    function connect(address _memberAddress) public {
-        require(isMember(msg.sender), "Not a member");
-        require(members[_memberAddress].memberAddress == _memberAddress, "Not a member");
-        connections[msg.sender].push(_memberAddress);
-        connections[_memberAddress].push(msg.sender);
-    }
+
 
     function getArticle(uint256 _articleId) public view returns(Article memory _article) {
         _article = articles[_articleId-1];
@@ -124,10 +118,6 @@ contract Uruk {
     function getMemberArticles(address _memberAddress) public view returns(uint256[] memory) {
         return members[_memberAddress].ownedArticles;
 
-    }
-
-    function getMemberConnections(address _memberAddress) public view returns(address[] memory) {
-        return connections[_memberAddress];
     }
 
     function isMember(address _memberAddress) public view returns(bool) {
