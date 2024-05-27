@@ -100,8 +100,9 @@ contract Uruk {
         _article.comments.push(currentComment);
     }
 
-
-
+    function getArticleCount() public view returns(uint256 _articleCount){
+        _articleCount = articles.length;
+    }
 
     function getArticle(uint256 _articleId) public view returns(Article memory _article) {
         _article = articles[_articleId-1];
