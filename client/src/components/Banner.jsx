@@ -1,6 +1,11 @@
 import Navigation from "./Navigation";
+import CommunityBanner from "./CommunityBanner";
+import HomeBanner from "./HomeBanner";
+import ProfileBanner from "./ProfileBanner";
+
 import { homeStyling, profileStyling, communityStyling } from "../constants/main";
 import { useEffect, useState } from "react";
+
 
 const Banner = ({ active, setActive }) => {
 
@@ -29,9 +34,9 @@ const Banner = ({ active, setActive }) => {
         <div className="banner-container" style={{ backgroundImage: styling.backgroundImage }}>
             <Navigation active={active} setActive={setActive} />
             <div className="banner-text">
-                <div className="banner-text1">{styling.text1}<br/></div>
-                <div className="banner-text2">{styling.text2}<br/></div>
-                <div className="banner-text3">{styling.text3}<br/></div>
+                {active === "home" && <HomeBanner></HomeBanner>}
+                {active === "community" && <CommunityBanner></CommunityBanner>}
+                {active === "profile" && <ProfileBanner></ProfileBanner>}
             </div>
 
         </div>
