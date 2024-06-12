@@ -1,8 +1,13 @@
+import "./style.scss"
 const HomeBanner = () => {
     return (
-        <div>
-            <h1>Home</h1>
-            <p>Welcome to the home page</p>
+        <div className="home-banner-container">
+            <div >
+                <p className="home-banner-text">Uruk, home to freedom and literacy</p>
+                <p className="home-banner-text">Where everything started</p>
+            </div>
+
+
         </div>
     );
 }
