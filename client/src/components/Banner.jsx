@@ -2,6 +2,7 @@ import Navigation from "./Navigation";
 import CommunityBanner from "./CommunityBanner";
 import HomeBanner from "./HomeBanner";
 import ProfileBanner from "./ProfileBanner";
+import "./style.scss"
 
 import { homeStyling, profileStyling, communityStyling } from "../constants/main";
 import { useEffect, useState } from "react";
