@@ -2,15 +2,21 @@ import {useEffect, useState} from "react";
 
 
 const Community = ({state, active, setActive}) => {
-    // const [members,setMembers] = useState([{
-    //     nickname: null,
-    //     memberIndex: null,
-    //     memberAddress: null,
-    //     memberSince: null,
-    // }]);
+
+    const [articles, setArticles] = useState({});
+    const getArticles = async () => {
+        const article = await state.contract.getArticle(1);
+        console.log(article);
+        setArticles(article);
+        console.log(articles);
+
+    }
+
+
 
     useEffect(() => {
-        setActive('community')
+        setActive('community');
+        getArticles();
     },  [])
 
 
@@ -21,4 +27,4 @@ const Community = ({state, active, setActive}) => {
     );
 };
 
-export default Community;
+export default Community
