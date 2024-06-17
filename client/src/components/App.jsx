@@ -7,7 +7,7 @@ import Profile from "./Profile.jsx";
 import Feed from "./Feed.jsx";
 import Home from "./Home.jsx";
 import Banner from "./Banner.jsx";
-import {contractAddr, personalAddress} from "../constants/contract.js";
+import {contractAddr} from "../constants/contract.js";
 import contract from "../contract/Uruk.json";
 
 
@@ -137,6 +137,7 @@ function App() {
                     const signer = provider.getSigner();
                     const contract = new ethers.Contract(contractAddr, contractABI,signer);
                     setState({provider: provider, signer: signer, contract: contract});
+                    console.log(state);
                 }
             } catch(e) {
                 console.log(e);
